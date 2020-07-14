@@ -35,6 +35,7 @@ jobs:
           name: install npm packages
           command: |
             cd infra
+            npm install aws-cdk
             npm install
       - run:
           name: deploy
