@@ -1,13 +1,27 @@
 version: 2.1
-jobs:
-  build:
+orbs:
+  aws-cli: circleci/aws-cli@1.2.1
+executors:
+  build-executor:
     docker:
       - image: circleci/golang:1.12
       # - image: circleci/postgres:9.6-alpine
       #   environment: # environment variables for primary container
       #     POSTGRES_USER: circleci-demo-go
       #     POSTGRES_DB: circle_test
-
+  deploy-executor:
+    executor: aws-cli/default
+    docker:
+      - image: circleci/node:12.2.0
+      # - image: circleci/postgres:9.6-alpine
+      #   environment: # environment variables for primary container
+      #     POSTGRES_USER: circleci-demo-go
+      #     POSTGRES_DB: circle_test
+commands:
+  my-command: some-orb/their-command
+jobs:
+  build:
+    executor: build-executor
     steps:
       - checkout # check out source code to working directory
       #  Wait for Postgres to be ready before proceeding
@@ -24,12 +38,11 @@ jobs:
           # store the results of our tests in the $TEST_RESULTS directory
           command: go test -count=1 -p=1 ./...
   deploy:
-    docker:
-      - image: circleci/node:12.2.0
-    orbs:
-      aws-cli: circleci/aws-cli@1.2.1
+    executor: deploy-executor
     steps:
       - checkout
+      - aws-cli/setup:
+        profile-name: default
       - run:
           name: install dependencies
           command: |
@@ -52,5 +65,6 @@ workflows:
     jobs:
       - build
       - deploy:
+          context: aws
           requires:
             - build
