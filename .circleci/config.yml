@@ -55,6 +55,8 @@ jobs:
       - run:
           name: deploy
           command: |
+            pwd
+            cd infra
             cdk synth
             cdk bootstrap
             cdk deploy --require-approval never
