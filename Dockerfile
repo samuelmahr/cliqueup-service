@@ -1,7 +1,7 @@
 #################
 # Build Stage
 #################
-FROM golang:1.13-alpine as builder
+FROM golang:1.13-alpine3.11 as builder
 
 RUN apk add curl git make g++ gcc librdkafka-dev --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
 
