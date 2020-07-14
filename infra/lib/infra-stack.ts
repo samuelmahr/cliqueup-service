@@ -33,18 +33,20 @@ export class InfraStack extends cdk.Stack {
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO)
     });
 
+    /*
     // Instantiate ECS Service with just cluster and image
     // @ts-ignore
     const ecsService = new ecs_patterns.NetworkLoadBalancedEc2Service(this, "Ec2Service", {
       cluster,
       memoryLimitMiB: 512,
       taskImageOptions: {
-        image: ecs.ContainerImage.fromDockerImageAsset(cliqueupServiceImageAsset)
+        image: ecs.ContainerImage.fromDockerImageAsset(cliqueupServiceImageAsset),
+        containerPort: 8000
       }
     });
 
     // Need target security group to allow all inbound traffic for
     // ephemeral port range (when host port is 0).
-    ecsService.service.connections.allowFromAnyIpv4(EPHEMERAL_PORT_RANGE);
+    ecsService.service.connections.allowFromAnyIpv4(EPHEMERAL_PORT_RANGE);*/
   }
 }
