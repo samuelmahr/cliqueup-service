@@ -35,7 +35,7 @@ jobs:
           # store the results of our tests in the $TEST_RESULTS directory
           command: go test -count=1 -p=1 ./...
   deploy:
-    executor: aws-cli/default
+    executor: deploy-executor
     steps:
       - checkout
       - setup_remote_docker:
