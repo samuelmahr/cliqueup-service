@@ -1,6 +1,5 @@
 version: 2.1
-orbs:
-  aws-cli: circleci/aws-cli@1.2.1
+
 executors:
   build-executor:
     docker:
@@ -16,9 +15,6 @@ executors:
       #   environment: # environment variables for primary container
       #     POSTGRES_USER: circleci-demo-go
       #     POSTGRES_DB: circle_test
-
-commands:
-  install-awscli: aws-cli/install
 
 jobs:
   build:
@@ -42,10 +38,12 @@ jobs:
     executor: aws-cli/default
     steps:
       - checkout
-      - install-awscli
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: install dependencies
           command: |
+            sudo apt-get install awscli
             sudo npm i -g aws-cdk
       - run:
           name: install npm packages
