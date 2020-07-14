@@ -5,4 +5,4 @@
 cd infra || exit
 cdk synth || exit
 cdk bootstrap || exit
-cdk deploy || exit
+cdk deploy --require-approval never || exit
