@@ -16,18 +16,16 @@ export class InfraStack extends cdk.Stack {
     super(scope, id, props);
 
     // @ts-ignore
-    const cliqueupApiRepository = new ecr.Repository(this, 'cliqueup-service-api');
-
-    // @ts-ignore
-    const asset = new DockerImageAsset(this, 'cliqueup-service-api-image', {
-      directory: path.join(__dirname, '../../')
+    const cliqueupServiceImageAsset = new DockerImageAsset(this, 'cliqueup-service-api-image', {
+      directory: path.join(__dirname, '../../'),
+      repositoryName: 'cliqueup-service-api'
     });
 
     // For better iteration speed, it might make sense to put this VPC into
     // a separate stack and import it here. We then have two stacks to
     // deploy, but VPC creation is slow so we'll only have to do that once
     // and can iterate quickly on consuming stacks. Not doing that for now.
-    /*const vpc = new ec2.Vpc(this, 'MyVpc', { maxAzs: 2 });
+    const vpc = new ec2.Vpc(this, 'MyVpc', { maxAzs: 2 });
 
     // @ts-ignore
     const cluster = new ecs.Cluster(this, 'Ec2Cluster', { vpc });
@@ -41,12 +39,12 @@ export class InfraStack extends cdk.Stack {
       cluster,
       memoryLimitMiB: 512,
       taskImageOptions: {
-        image: ecs.ContainerImage.fromRegistry(cliqueupApiRepository.repositoryName),
+        image: ecs.ContainerImage.fromDockerImageAsset(cliqueupServiceImageAsset)
       }
     });
 
     // Need target security group to allow all inbound traffic for
     // ephemeral port range (when host port is 0).
-    ecsService.service.connections.allowFromAnyIpv4(EPHEMERAL_PORT_RANGE);*/
+    ecsService.service.connections.allowFromAnyIpv4(EPHEMERAL_PORT_RANGE);
   }
 }
