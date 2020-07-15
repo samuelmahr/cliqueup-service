@@ -16,9 +16,9 @@ export class InfraStack extends cdk.Stack {
     super(scope, id, props);
 
     // @ts-ignore
-    const cliqueupServiceImageAsset = new DockerImageAsset(this, 'cliqueup-api-image', {
+    const cliqueupServiceImageAsset = new DockerImageAsset(this, 'cliqueup-service-api-image', {
       directory: path.join(__dirname, '../../'),
-      repositoryName: 'cliqueup-api'
+      repositoryName: 'cliqueup-service-api'
     });
 
     // For better iteration speed, it might make sense to put this VPC into
@@ -28,14 +28,14 @@ export class InfraStack extends cdk.Stack {
     const vpc = new ec2.Vpc(this, 'MyVpc', { maxAzs: 2 });
 
     // @ts-ignore
-    const cluster = new ecs.Cluster(this, 'CliqueUpEc2Cluster', { vpc });
+    const cluster = new ecs.Cluster(this, 'Ec2Cluster', { vpc });
     cluster.addCapacity('DefaultAutoScalingGroup', {
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO)
     });
 
     // Instantiate ECS Service with just cluster and image
     // @ts-ignore
-    const ecsService = new ecs_patterns.NetworkLoadBalancedEc2Service(this, "CliqueUpEc2Service", {
+    const ecsService = new ecs_patterns.NetworkLoadBalancedEc2Service(this, "Ec2Service", {
       cluster,
       memoryLimitMiB: 512,
       taskImageOptions: {
@@ -49,8 +49,8 @@ export class InfraStack extends cdk.Stack {
     // ephemeral port range (when host port is 0).
     ecsService.service.connections.allowFromAnyIpv4(EPHEMERAL_PORT_RANGE);
 
-    const cliqueUpUserPool = new cognito.UserPool(this, 'cliqueup-userpool', {
-      userPoolName: 'cliqueup-userpool',
+    const cliqueUpUserPool = new cognito.UserPool(this, 'cliqueup-user-pool', {
+      userPoolName: 'cliqueup-user-pool',
       selfSignUpEnabled: true,
       userVerification: {
         emailSubject: 'Verify your email for CliqueUp!',
