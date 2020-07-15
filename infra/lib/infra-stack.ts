@@ -4,6 +4,7 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecs_patterns from '@aws-cdk/aws-ecs-patterns'
 import * as path from "path";
+import * as cognito from '@aws-cdk/aws-cognito'
 
 /**
  * The port range to open up for dynamic port mapping
@@ -46,5 +47,43 @@ export class InfraStack extends cdk.Stack {
     // Need target security group to allow all inbound traffic for
     // ephemeral port range (when host port is 0).
     ecsService.service.connections.allowFromAnyIpv4(EPHEMERAL_PORT_RANGE);
+
+    const cliqueUpUserPool = new cognito.UserPool(this, 'cliqueup-user-pool', {
+      userPoolName: 'cliqueup-user-pool',
+      selfSignUpEnabled: true,
+      userVerification: {
+        emailSubject: 'Verify your email for CliqueUp!',
+        emailBody: 'Hello {username}, Thanks for signing up to CliqueUp! Your verification code is {####}',
+        emailStyle: cognito.VerificationEmailStyle.CODE,
+        smsMessage: 'Hello {username}, Thanks for signing up to our CliqueUp! Your verification code is {####}',
+      },
+      signInAliases: {
+        phone: true,
+        email: true
+      },
+      autoVerify: {
+        email: true,
+        phone: true
+      },
+      standardAttributes: {
+        email: {
+          required: true,
+          mutable: false,
+        },
+        phoneNumber: {
+          required: false,
+          mutable: true,
+        },
+      },
+      passwordPolicy: {
+        minLength: 12,
+        requireLowercase: true,
+        requireUppercase: true,
+        requireDigits: true,
+        requireSymbols: false,
+        tempPasswordValidity: cdk.Duration.days(3),
+      },
+      accountRecovery: cognito.AccountRecovery.EMAIL_AND_PHONE_WITHOUT_MFA,
+    });
   }
 }
