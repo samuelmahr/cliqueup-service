@@ -5,6 +5,7 @@ import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecs_patterns from '@aws-cdk/aws-ecs-patterns'
 import * as path from "path";
 import * as cognito from '@aws-cdk/aws-cognito'
+import * as rds from '@aws-cdk/aws-rds'
 
 /**
  * The port range to open up for dynamic port mapping
@@ -85,6 +86,17 @@ export class InfraStack extends cdk.Stack {
         tempPasswordValidity: cdk.Duration.days(3),
       },
       accountRecovery: cognito.AccountRecovery.EMAIL_AND_PHONE_WITHOUT_MFA,
+    });
+
+    // @ts-ignore
+    const cliqueupDbInstance = new rds.DatabaseInstance(this, 'Instance', {
+      engine: rds.DatabaseInstanceEngine.POSTGRES,
+      engineVersion: '11.1',
+      instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.MICRO),
+      masterUsername: 'master',
+      masterUserPassword: cdk.SecretValue.plainText('Passw0rd'),
+      databaseName: 'cliqueup',
+      vpc
     });
   }
 }
