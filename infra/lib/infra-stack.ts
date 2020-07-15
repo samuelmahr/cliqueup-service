@@ -96,7 +96,8 @@ export class InfraStack extends cdk.Stack {
       masterUsername: 'master',
       masterUserPassword: cdk.SecretValue.plainText('Passw0rd'),
       databaseName: 'cliqueup',
-      vpc
+      vpc,
+      vpcPlacement: { subnetType: ec2.SubnetType.PUBLIC }
     });
   }
 }
