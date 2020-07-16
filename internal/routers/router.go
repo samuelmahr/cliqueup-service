@@ -18,6 +18,6 @@ func NewV1Router(c *configuration.AppConfig) V1Router {
 func (v *V1Router) Register(root *mux.Router) {
 	r := root.PathPrefix("/v1").Subrouter()
 
-	authController := controllers.NewV1UsersController(v.config)
-	authController.RegisterRoutes(r)
+	usersController := controllers.NewV1UsersController(v.config)
+	usersController.RegisterRoutes(r)
 }
