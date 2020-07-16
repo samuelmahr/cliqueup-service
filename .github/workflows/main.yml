@@ -28,20 +28,19 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
-      - name: change to infrastructure directory
-        run: cd infra
-      - name: install aws cdk globally
-        run: sudo npm i -g aws-cdk
       - name: install packages
-        run: npm install
+        run: |
+          cd infra
+          sudo npm i -g aws-cdk
+          npm install
         env:
           CI: true
-      - name: synthesize cloudformation template
-        run: cdk synth
-      - name: bootstrap
-        run: cdk bootstrap
-      - name: deploy updated infrastructure!
-        run: cdk deploy --require-approval never
+      - name: deploy infrastructure
+        run: |
+          cd infra
+          cdk synth
+          cdk bootstrap
+          cdk deploy --require-approval never
 
   apply-migrations:
     needs: deploy
