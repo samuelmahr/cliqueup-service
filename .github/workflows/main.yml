@@ -8,9 +8,11 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.13.1'
-      - run: go test -count=1 -p=1 ./...
+      - name: run tests
+        run: go test -count=1 -p=1 ./...
 
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,11 +28,25 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
-      - run: cd infra
-      - run: sudo npm i -g aws-cdk
-      - run: npm install
-      - run: cdk synth
-      - run: cdk bootstrap
-      - run: cdk deploy --require-approval never
+      - name: change to infrastructure directory
+        run: cd infra
+      - name: install aws cdk globally
+        run: sudo npm i -g aws-cdk
+      - name: install packages
+        run: npm install
         env:
           CI: true
+      - name: synthesize cloudformation template
+        run: cdk synth
+      - name: bootstrap
+        run: cdk bootstrap
+      - name: deploy updated infrastructure!
+        run: cdk deploy --require-approval never
+
+  apply-migrations:
+    needs: deploy
+    runs-on: ubuntu-latest
+    container: migrate/migrate:v4.10.0
+    steps:
+      - name: apply migrations
+        run: migrate -database $POSTGRES_URL -path migrations up
