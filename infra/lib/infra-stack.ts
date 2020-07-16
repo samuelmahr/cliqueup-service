@@ -89,7 +89,7 @@ export class InfraStack extends cdk.Stack {
     });
 
     // @ts-ignore
-    const cliqueupDbInstance = new rds.DatabaseInstance(this, 'Instance', {
+    /*const cliqueupDbInstance = new rds.DatabaseInstance(this, 'Instance', {
       engine: rds.DatabaseInstanceEngine.POSTGRES,
       engineVersion: '11.1',
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.MICRO),
@@ -98,6 +98,6 @@ export class InfraStack extends cdk.Stack {
       databaseName: 'cliqueup',
       vpc,
       vpcPlacement: { subnetType: ec2.SubnetType.PUBLIC }
-    });
+    });*/
   }
 }

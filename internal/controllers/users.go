@@ -19,21 +19,21 @@ type junk struct {
 	Hello string `json:"hello"`
 }
 
-type V1AuthController struct {
+type V1UsersController struct {
 	config *configuration.AppConfig
 }
 
-func NewV1AuthController(c *configuration.AppConfig) V1AuthController {
-	return V1AuthController{
+func NewV1UsersController(c *configuration.AppConfig) V1UsersController {
+	return V1UsersController{
 		config: c,
 	}
 }
 
-func (a *V1AuthController) RegisterRoutes(v1 *mux.Router) {
-	v1.Path("/auth/createUser").Name("CreateUser").Handler(http.HandlerFunc(a.CreateUser)).Methods(http.MethodPost)
+func (a *V1UsersController) RegisterRoutes(v1 *mux.Router) {
+	v1.Path("/users").Name("CreateUser").Handler(http.HandlerFunc(a.CreateUser)).Methods(http.MethodPost)
 }
 
-func (a *V1AuthController) CreateUser(w http.ResponseWriter, r *http.Request) {
+func (a *V1UsersController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	b, err := json.Marshal(junk{Hello: "world"})
@@ -45,7 +45,7 @@ func (a *V1AuthController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(b)
 }
 
-func (a *V1AuthController) respondError(ctx context.Context, w http.ResponseWriter, status int, message string, causer error) {
+func (a *V1UsersController) respondError(ctx context.Context, w http.ResponseWriter, status int, message string, causer error) {
 	resp := map[string]interface{}{
 		"error": message,
 	}
