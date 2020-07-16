@@ -1,1 +1,1 @@
-migrate -database "postgresql://master:Passw0rd@ci1r23p60ha9tym.c9u4kiil8p47.us-east-1.rds.amazonaws.com/cliqueup" -path migrations up
+migrate -database "postgresql://$POSTGRES_USER:$POSTGRES_PASS@$POSTGRES_HOST/$POSTGRES_DATABASE" -path migrations up
