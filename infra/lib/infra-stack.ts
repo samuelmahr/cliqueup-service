@@ -88,14 +88,18 @@ export class InfraStack extends cdk.Stack {
       accountRecovery: cognito.AccountRecovery.EMAIL_AND_PHONE_WITHOUT_MFA,
     });
 
+    const pgUsername = process.env.POSTGRES_USER || "master";
+    const pgPassword = process.env.POSTGRES_PASS || "Passw0rd";
+    const dbName = process.env.POSTGRES_DATABASE || "cliqueup";
+
     // @ts-ignore
     const cliqueupDbInstance = new rds.DatabaseInstance(this, 'Instance', {
       engine: rds.DatabaseInstanceEngine.POSTGRES,
       engineVersion: '11.1',
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.MICRO),
-      masterUsername: 'master',
-      masterUserPassword: cdk.SecretValue.plainText('Passw0rd'),
-      databaseName: 'cliqueup',
+      masterUsername: pgUsername,
+      masterUserPassword: cdk.SecretValue.plainText(pgPassword),
+      databaseName: dbName,
       vpc,
       vpcPlacement: { subnetType: ec2.SubnetType.PUBLIC }
     });

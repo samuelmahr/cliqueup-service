@@ -1,0 +1,38 @@
+name: build and deploy
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Go action
+        - uses: actions/setup-go@v2
+          with:
+            go-version: '^1.13.1'
+      command: go test -count=1 -p=1 ./...
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+          uses: actions/setup-node@v1
+          with:
+            node-version: '12.x'
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+      - run: cd infra
+      - run: sudo npm i -g aws-cdk
+      - run: npm install
+      - run: cdk synth
+      - run: cdk bootstrap
+      - run: cdk deploy --require-approval never
+        env:
+          CI: true
