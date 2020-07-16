@@ -28,8 +28,9 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
-      - name: install packages
+      - name: install dependencies and packages
         run: |
+          sudo apt-get install awscli
           cd infra
           sudo npm i -g aws-cdk
           npm install
