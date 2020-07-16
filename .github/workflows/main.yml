@@ -28,6 +28,14 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
+      - name: pull secrets
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
+          POSTGRES_PASS: ${{ secrets.POSTGRES_PASS }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       - name: install dependencies and packages
         run: |
           sudo apt-get install awscli
@@ -48,5 +56,8 @@ jobs:
     runs-on: ubuntu-latest
     container: migrate/migrate:v4.10.0
     steps:
+      - name: pull secrets
+        env:
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
       - name: apply migrations
         run: migrate -database $POSTGRES_URL -path migrations up
