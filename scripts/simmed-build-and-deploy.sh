@@ -8,3 +8,5 @@ cd infra || exit
 cdk synth || exit
 cdk bootstrap || exit
 cdk deploy --require-approval never || exit
+
+migrate -database "${CLIQUEUP_POSTGRESQL_URL}" -path migrations up
