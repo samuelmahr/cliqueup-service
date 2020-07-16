@@ -99,5 +99,7 @@ export class InfraStack extends cdk.Stack {
       vpc,
       vpcPlacement: { subnetType: ec2.SubnetType.PUBLIC }
     });
+
+    cliqueupDbInstance.connections.allowDefaultPortFromAnyIpv4()
   }
 }
