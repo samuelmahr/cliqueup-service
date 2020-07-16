@@ -1,0 +1,10 @@
+name: build and deploy
+jobs:
+  apply-migrations:
+    runs-on: ubuntu-latest
+    container: migrate/migrate:v4.10.0
+    steps:
+      - name: apply migrations
+        env:
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+        run: migrate -database $POSTGRES_URL -path ./migrations up

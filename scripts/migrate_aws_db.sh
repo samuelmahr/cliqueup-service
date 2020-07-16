@@ -1,1 +1,0 @@
-migrate -database "$POSTGRES_URL" -path migrations up

@@ -58,4 +58,4 @@ jobs:
       - name: apply migrations
         env:
           POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
-        run: migrate -database $POSTGRES_URL -path migrations up
+        run: migrate -database $POSTGRES_URL -path ./migrations up
