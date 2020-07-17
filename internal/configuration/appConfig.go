@@ -25,9 +25,9 @@ func Configuration() *AppConfig {
 }
 
 func Configure() (*AppConfig, error) {
-	err := godotenv.Load()
+	err := godotenv.Load("../../local.env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Error("Error loading .env file..")
 	}
 
 	maxConns, err := strconv.Atoi(getEnv("POSTGRES_MAX_OPEN_CONNS", "10"))
