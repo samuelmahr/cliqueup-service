@@ -1,11 +1,12 @@
 package configuration
 
 import (
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"strconv"
 
-	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
 )
 
 type AppConfig struct {
@@ -25,32 +26,35 @@ func Configuration() *AppConfig {
 }
 
 func Configure() (*AppConfig, error) {
-	err := godotenv.Load("../../local.env")
+	viper.SetConfigFile("../../.env")
+	err := viper.ReadInConfig()
 	if err != nil {
-		log.Error("Error loading .env file..")
+		log.Fatalf("Error while reading config file %s", err)
 	}
 
-	maxConns, err := strconv.Atoi(getEnv("POSTGRES_MAX_OPEN_CONNS", "10"))
-	if err != nil {
-		log.Fatal(err)
-	}
+	fmt.Printf("%v", viper.AllKeys())
 
-	maxIdle, err := strconv.Atoi(getEnv("POSTGRES_MAX_IDLE_CONNS", "5"))
+	maxConns, err := strconv.Atoi(getEnv("postgres_max_open_conns", "10"))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	maxLifetime, err := strconv.Atoi(getEnv("POSTGRES_MAX_CONN_LIFETIME_SECONDS", "3600"))
+	maxIdle, err := strconv.Atoi(getEnv("postgres_max_idle_conns", "5"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	maxLifetime, err := strconv.Atoi(getEnv("postgres_max_conn_lifetime_seconds", "3600"))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	c := AppConfig{}
-	c.DatabaseURL = os.Getenv("DATABASE_URL")
+	c.DatabaseURL = getEnv("database_url", "")
 	c.PostgresMaxOpenConns = maxConns
 	c.PostgresMaxIdleConns = maxIdle
 	c.PostgresMaxConnLifetimeSeconds = maxLifetime
-	c.TestDatabaseURL = os.Getenv("TEST_DATABASE_URL")
+	c.TestDatabaseURL = getEnv("test_database_url", "")
 
 	c.Log.SetFormatter(&log.JSONFormatter{})
 
@@ -65,8 +69,10 @@ func Configure() (*AppConfig, error) {
 }
 
 func getEnv(key, fallback string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
+	value := viper.GetString(key)
+	if len(value) == 0 {
+		return fallback
 	}
-	return fallback
+
+	return value
 }
