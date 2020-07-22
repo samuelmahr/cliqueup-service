@@ -19,7 +19,7 @@ type junk struct {
 
 type V1UsersController struct {
 	config *configuration.AppConfig
-	repo   repo.UsersRepository
+	repo   repo.UsersRepoType
 }
 
 func NewV1UsersController(c *configuration.AppConfig, uRepo repo.UsersRepoType) V1UsersController {

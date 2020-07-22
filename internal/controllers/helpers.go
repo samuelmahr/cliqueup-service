@@ -14,8 +14,8 @@ func respondError(ctx context.Context, w http.ResponseWriter, status int, messag
 		"error": message,
 	}
 
-	if status >= 500 {
-		a.config.Log.WithFields(log.Fields{
+	if status >= 400 {
+		log.WithFields(log.Fields{
 			"message": message,
 			"causer":  causer,
 		},

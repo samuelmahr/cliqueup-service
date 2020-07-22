@@ -23,7 +23,7 @@ func NewUsersRepository(db *sqlx.DB) UsersRepoType {
 
 const createUserQuery = `
 insert into users(email, first_name, last_name, birthday, phone_number, subid)
-VALUES ($1, $2, $3, $4, $5, $6))
+VALUES ($1, $2, $3, $4, $5, $6)
 returning id as user_id, email, first_name, last_name, birthday, phone_number, subid, created_at, updated_at
 `
 

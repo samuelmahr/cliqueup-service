@@ -3,13 +3,32 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      # Label used to access the service container
+      postgres:
+        image: postgres
+
+        env:
+          POSTGRES_PASSWORD: Passw0rd
+          POSTGRES_USER: master
+          POSTGRES_DB: cliqueup_test
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    container: migrate/migrate:v4.10.0
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.13.1'
       - name: run tests
-        run: go test -count=1 -p=1 ./...
+        run: |
+        sleep 30
+        go test -count=1 -p=1 ./...
 
   deploy:
     needs: build

@@ -26,7 +26,11 @@ func Configuration() *AppConfig {
 }
 
 func Configure() (*AppConfig, error) {
-	viper.SetConfigFile("../../.env")
+	viper.SetConfigName("local")
+	viper.SetConfigType("env")
+	viper.AddConfigPath(".")
+	viper.AddConfigPath("../")
+	viper.AddConfigPath("../../")
 	err := viper.ReadInConfig()
 	if err != nil {
 		log.Fatalf("Error while reading config file %s", err)
@@ -65,7 +69,7 @@ func Configure() (*AppConfig, error) {
 	// Only log the warning severity or above.
 	c.Log.SetLevel(log.WarnLevel)
 
-	return &globalConfig, nil
+	return &c, nil
 }
 
 func getEnv(key, fallback string) string {

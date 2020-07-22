@@ -35,11 +35,11 @@ func TestUserRepository_CreateUser(t *testing.T) {
 			want: models.User{
 				ID:          1,
 				Email:       "jake@statefarm.com",
-				FirstName:   "JAke",
+				FirstName:   "Jake",
 				LastName:    "From State Farm",
 				Birthday:    now,
 				PhoneNumber: &phone,
-				Subid:       "cognito",
+				Subid:       "cognitoid",
 			},
 			args: args{
 				user: models.UsersCreateRequest{
@@ -62,10 +62,10 @@ func TestUserRepository_CreateUser(t *testing.T) {
 			}
 
 			got, err := r.CreateUser(context.Background(), tt.args.user)
-			if err != nil && !tt.wantErr {
-				t.Fatal(err)
-			} else if err != nil && tt.wantErr {
+			if err != nil && tt.wantErr {
 				assert.True(t, errors.Is(err, err))
+			} else if err != nil {
+				t.Fatal(err)
 			} else {
 				assert.Equal(t, tt.want.ID, got.ID)
 				assert.Equal(t, tt.want.Email, got.Email)

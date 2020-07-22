@@ -9,16 +9,17 @@ import (
 
 type V1Router struct {
 	config *configuration.AppConfig
+	uRepo  repo.UsersRepoType
 }
 
 func NewV1Router(c *configuration.AppConfig, uRepo repo.UsersRepoType) V1Router {
-	return V1Router{config: c}
+	return V1Router{config: c, uRepo: uRepo}
 }
 
 //InitRoutes initialize all routes
 func (v *V1Router) Register(root *mux.Router) {
 	r := root.PathPrefix("/v1").Subrouter()
 
-	usersController := controllers.NewV1UsersController(v.config, uRepo)
+	usersController := controllers.NewV1UsersController(v.config, v.uRepo)
 	usersController.RegisterRoutes(r)
 }
