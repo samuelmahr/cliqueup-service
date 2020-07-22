@@ -19,7 +19,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    container: migrate/migrate:v4.10.0
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -27,7 +26,6 @@ jobs:
           go-version: '^1.13.1'
       - name: run tests
         run: |
-          sleep 30
           go test -count=1 -p=1 ./...
 
   deploy:
