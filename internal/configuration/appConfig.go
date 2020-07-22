@@ -1,7 +1,6 @@
 package configuration
 
 import (
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"strconv"
@@ -35,8 +34,6 @@ func Configure() (*AppConfig, error) {
 	if err != nil {
 		log.Fatalf("Error while reading config file %s", err)
 	}
-
-	fmt.Printf("%v", viper.AllKeys())
 
 	maxConns, err := strconv.Atoi(getEnv("postgres_max_open_conns", "10"))
 	if err != nil {
