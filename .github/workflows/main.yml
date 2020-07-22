@@ -27,8 +27,8 @@ jobs:
           go-version: '^1.13.1'
       - name: run tests
         run: |
-        sleep 30
-        go test -count=1 -p=1 ./...
+          sleep 30
+          go test -count=1 -p=1 ./...
 
   deploy:
     needs: build
