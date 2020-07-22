@@ -27,7 +27,7 @@ jobs:
       - name: run tests
         run: go test -count=1 -p=1 ./...
         env:
-          TEST_DATABASE_URL: postgres://master:Passw0rd@postgres:5432/cliqueup_test?sslmode=disable&TimeZone=utc
+          TEST_DATABASE_URL: postgres://master:Passw0rd@database:5432/cliqueup_test?sslmode=disable&TimeZone=utc
 
   deploy:
     needs: build
